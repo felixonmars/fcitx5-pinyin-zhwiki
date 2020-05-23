@@ -1,0 +1,14 @@
+zhwiki dictionary for fcitx5-pinyin
+
+
+Build time requirements:
+
+Python modules:
+opencc
+pypinyin
+
+
+Installation:
+
+make
+sudo make install
