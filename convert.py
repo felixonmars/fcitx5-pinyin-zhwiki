@@ -15,6 +15,10 @@ with open(FILE) as f:
         if not HANZI_RE.match(line):
             continue
 
+        # Skip list page.
+        if line.endswith('\u5217\u8868'):
+            continue
+
         pinyin = "'".join(lazy_pinyin(line))
         if pinyin == line:
             print("Failed to convert, ignoring:", pinyin, file=sys.stderr)
