@@ -1,14 +1,31 @@
 zhwiki dictionary for fcitx5-pinyin
 
 
-Build time requirements:
+Installation:
+
+- Arch Linux:
+
+Install from AUR: https://aur.archlinux.org/packages/fcitx5-pinyin-zhwiki/
+
+- Others:
+
+Download latest version of "zhwiki.dict" from:
+https://github.com/felixonmars/fcitx5-pinyin-zhwiki/releases
+
+Copy into /usr/share/fcitx5/pinyin/dictionaries/ (create the folder if it does not exist)
+
+
+
+Build Time Requirements:
+
+libime (https://github.com/fcitx/libime/)
 
 Python modules:
-opencc
-pypinyin
+opencc (https://pypi.org/project/OpenCC/)
+pypinyin (https://pypi.org/project/pypinyin/)
 
 
-Installation:
+Manual Build & Installation:
 
 make
 sudo make install
