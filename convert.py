@@ -15,7 +15,11 @@ with open(FILE) as f:
         if not HANZI_RE.match(line):
             continue
 
-        # Skip list page.
+        # Skip single character & too long pages
+        if not 1 < len(line) < 9:
+            continue
+
+        # Skip list pages
         if line.endswith('\u5217\u8868'):
             continue
 
