@@ -16,7 +16,7 @@ Copy into /usr/share/fcitx5/pinyin/dictionaries/ (create the folder if it does n
 
 
 
-Build Time Requirements:
+Build Requirements:
 
 libime (https://github.com/fcitx/libime/)
 
@@ -29,3 +29,8 @@ Manual Build & Installation:
 
 make
 sudo make install
+
+
+License: Unlicense
+
+Note that the generated dictionary follows Wikimedia's license: https://dumps.wikimedia.org/legal.html
