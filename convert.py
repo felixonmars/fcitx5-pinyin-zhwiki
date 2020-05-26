@@ -1,4 +1,5 @@
-#!/bin/python
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
 import sys
 import re
 import opencc
@@ -17,11 +18,11 @@ with open(FILE) as f:
             continue
 
         # Skip single character & too long pages
-        if not 1 < len(line) < 9:
+        if not 1 < len(line):
             continue
 
         # Skip list pages
-        if line.endswith('\u5217\u8868'):
+        if line.endswith(('列表', '对照表')):
             continue
 
         if last_word and len(last_word) >= 4 and line.startswith(last_word):
