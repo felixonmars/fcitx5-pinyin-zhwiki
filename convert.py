@@ -47,8 +47,7 @@ def is_good_title(title, previous_title=None):
 
 
 def log_count(count):
-    if count % _LOG_EVERY == 0:
-        logging.info(f'{count} words generated')
+    logging.info(f'{count} words generated')
 
 
 def make_output(word, pinyin):
@@ -69,7 +68,8 @@ def main():
                     continue
                 print(make_output(title, pinyin))
                 result_count += 1
-                log_count(result_count)
+                if result_count % _LOG_EVERY == 0:
+                    log_count(result_count)
                 previous_title = title
     log_count(result_count)
 
