@@ -1,4 +1,4 @@
-zhwiki dictionary for fcitx5-pinyin
+zhwiki dictionary for fcitx5-pinyin and rime
 
 
 Installation:
@@ -30,6 +30,10 @@ Manual Build & Installation:
 make
 sudo make install
 
+Manual Build rime dict & Installation
+
+make zhwiki.dict.yaml
+sudo make install_rime_dict
 
 License: Unlicense
 
