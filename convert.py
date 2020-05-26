@@ -3,12 +3,13 @@ import sys
 import re
 import opencc
 from pypinyin import lazy_pinyin
-converter = opencc.OpenCC('t2s.json')
 
 FILE = sys.argv[1]
 
+converter = opencc.OpenCC('t2s.json')
 HANZI_RE = re.compile('^[\u4e00-\u9fa5]+$')
 count = 0
+last_word = None
 with open(FILE) as f:
     for line in f:
         line = line.rstrip("\n")
@@ -23,10 +24,15 @@ with open(FILE) as f:
         if line.endswith('\u5217\u8868'):
             continue
 
+        if last_word and len(last_word) >= 4 and line.startswith(last_word):
+            continue
+
         pinyin = "'".join(lazy_pinyin(line))
         if pinyin == line:
             print("Failed to convert, ignoring:", pinyin, file=sys.stderr)
             continue
+
+        last_word = line
 
         print("\t".join((converter.convert(line), pinyin, "0")))
         count += 1
