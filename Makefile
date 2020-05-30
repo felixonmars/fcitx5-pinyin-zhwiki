@@ -1,4 +1,5 @@
-FILENAME=zhwiki-20200501-all-titles-in-ns0
+VERSION=20200520
+FILENAME=zhwiki-$(VERSION)-all-titles-in-ns0
 
 all: build
 
@@ -7,7 +8,7 @@ build: zhwiki.dict
 download: $(FILENAME).gz
 
 $(FILENAME).gz:
-	wget https://dumps.wikimedia.org/zhwiki/20200501/$(FILENAME).gz
+	wget https://dumps.wikimedia.org/zhwiki/$(VERSION)/$(FILENAME).gz
 
 web-slang.source:
 	./zhwiki-web-slang.py > web-slang.source
