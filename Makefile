@@ -1,4 +1,4 @@
-VERSION=20200520
+VERSION=20200620
 FILENAME=zhwiki-$(VERSION)-all-titles-in-ns0
 
 all: build
@@ -25,10 +25,11 @@ zhwiki.raw: zhwiki.source
 zhwiki.dict: zhwiki.raw
 	libime_pinyindict zhwiki.raw zhwiki.dict
 
-zhwiki.dict.yaml: zhwiki.raw
-	sed 's/[ ][ ]*/\t/g' zhwiki.raw > zhwiki.rime.raw
-	sed -i 's/\t0//g' zhwiki.rime.raw
-	sed -i "s/'/ /g" zhwiki.rime.raw
+zhwiki.rime.raw: zhwiki.source
+	./convert.py zhwiki.source --rime > zhwiki.rime.raw
+
+zhwiki.dict.yaml: zhwiki.rime.raw
+	echo '# zhwiki-$(VERSION)' > zhwiki.dict.yaml
 	echo -e '---\nname: zhwiki\nversion: "0.1"\nsort: by_weight\n...\n' >> zhwiki.dict.yaml
 	cat zhwiki.rime.raw >> zhwiki.dict.yaml
 
