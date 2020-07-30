@@ -7,6 +7,12 @@ Installation:
 
 Install from AUR: https://aur.archlinux.org/packages/fcitx5-pinyin-zhwiki/
 
+- Plum (for RIME):
+
+```
+$ rime-install felixonmars/fcitx5-pinyin-zhwiki
+```
+
 - Others:
 
 Download latest version of "zhwiki.dict" from:
