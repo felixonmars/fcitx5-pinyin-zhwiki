@@ -16,7 +16,7 @@ $ rime-install felixonmars/fcitx5-pinyin-zhwiki
 Download latest version of "zhwiki.dict" from:
 https://github.com/felixonmars/fcitx5-pinyin-zhwiki/releases
 
-Copy into /usr/share/fcitx5/pinyin/dictionaries/ (create the folder if it does not exist)
+Copy into ~/.local/share/fcitx5/pinyin/dictionaries/ (create the folder if it does not exist)
 
 
 
