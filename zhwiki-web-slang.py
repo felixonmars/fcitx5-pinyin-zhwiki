@@ -4,13 +4,14 @@
 import json
 import urllib.parse
 import urllib.request
+import collections
 
 _ZHWIKI_SOURCE_URL = "https://zh.wikipedia.org/w/api.php?action=parse&format=json&prop=wikitext&uselang=zh&formatversion=2&page="
 _PAGE = "中国大陆网络用语列表"
 
 page = urllib.request.urlopen(_ZHWIKI_SOURCE_URL + urllib.parse.quote(_PAGE)).read()
 wikitext = json.loads(page)["parse"]["wikitext"]
-words = set()
+words = collections.OrderedDict()
 
 
 def add_word(word):
@@ -18,7 +19,7 @@ def add_word(word):
         return
     for garbage in ("、", "[", "]", "…"):
         word = word.replace(garbage, "")
-    words.add(word.strip())
+    words[word.strip()] = None
 
 
 def add_words(word):
