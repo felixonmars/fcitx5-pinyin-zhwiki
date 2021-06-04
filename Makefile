@@ -1,6 +1,8 @@
-VERSION=20210101
+VERSION=20210601
+WEB_SLANG_VERSION=20210605
 FILENAME=zhwiki-$(VERSION)-all-titles-in-ns0
-WEB_SLANG_FILE=web-slang-$(VERSION).source
+WEB_SLANG_FILE=web-slang-$(WEB_SLANG_VERSION).txt
+WEB_SLANG_SOURCE=web-slang-$(WEB_SLANG_VERSION).source
 
 all: build
 
@@ -11,8 +13,11 @@ download: $(FILENAME).gz
 $(FILENAME).gz:
 	wget https://dumps.wikimedia.org/zhwiki/$(VERSION)/$(FILENAME).gz
 
-$(WEB_SLANG_FILE):
-	./zhwiki-web-slang.py > $(WEB_SLANG_FILE)
+$(WEB_SLANG_SOURCE):
+	./zhwiki-web-slang.py --fetch > $(WEB_SLANG_SOURCE)
+
+$(WEB_SLANG_FILE): $(WEB_SLANG_SOURCE)
+	./zhwiki-web-slang.py --process $(WEB_SLANG_SOURCE) > $(WEB_SLANG_FILE)
 
 $(FILENAME): $(FILENAME).gz
 	gzip -k -d $(FILENAME).gz
