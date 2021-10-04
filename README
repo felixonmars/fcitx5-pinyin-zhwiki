@@ -5,7 +5,7 @@ Installation:
 
 - Arch Linux:
 
-Install from AUR: https://aur.archlinux.org/packages/fcitx5-pinyin-zhwiki/
+$ sudo pacman -S fcitx5-pinyin-zhwiki
 
 - Plum (for RIME):
 
