@@ -26,7 +26,8 @@ zhwiki.source: $(FILENAME) $(WEB_SLANG_FILE)
 	cat $(FILENAME) $(WEB_SLANG_FILE) > zhwiki.source
 
 zhwiki.raw: zhwiki.source
-	./convert.py zhwiki.source > zhwiki.raw
+	./convert.py zhwiki.source > zhwiki.raw.tmp
+	sort -u zhwiki.raw.tmp > zhwiki.raw
 
 zhwiki.dict: zhwiki.raw
 	libime_pinyindict zhwiki.raw zhwiki.dict
