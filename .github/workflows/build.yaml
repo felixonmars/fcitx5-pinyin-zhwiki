@@ -1,7 +1,9 @@
 name: Build Latest Dictionary Files
 
 on:
-  push
+  push:
+    branches:
+      - master
 
 jobs:
   build:
