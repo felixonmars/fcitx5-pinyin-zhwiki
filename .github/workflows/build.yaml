@@ -1,0 +1,40 @@
+name: Build Latest Dictionary Files
+
+on:
+  push
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        submodules: true
+    
+    - name: Prepare Environment
+      run: |
+          pip3 install opencc pypinyin
+          sudo apt install libime-bin
+    
+    - name: Build
+      run: make zhwiki.dict zhwiki.dict.yaml
+
+    - name: Extract tag name
+      id: tag
+      run: |
+          version_line=$(cat Makefile | grep 'VERSION=' -m 1)
+          echo "::set-output name=result::${version_line#VERSION=}"
+
+    - name: Release
+      uses: ncipollo/release-action@v1
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        artifacts: "zhwiki.dict,zhwiki.dict.yaml"
+        bodyFile: "CHANGELOG.md"
+        commit: ${{ github.sha }}
+        tag: ${{ steps.tag.outputs.result }}
+        allowUpdates: true
+
+
+
