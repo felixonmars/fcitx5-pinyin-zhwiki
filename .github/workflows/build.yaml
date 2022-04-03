@@ -13,6 +13,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
       with:
+        fetch-depth: 0
         submodules: true
     
     - name: Prepare Environment
@@ -41,7 +42,7 @@ jobs:
       uses: ncipollo/release-action@v1
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
-        artifacts: zhwiki-{{ steps.info.outputs.version }}.dict,zhwiki-{{ steps.info.outputs.version }}.dict.yaml,web-slang-{{ steps.info.outputs.web_slang_version }}.source
+        artifacts: ${{ format('zhwiki-{0}.dict,zhwiki-{0}.dict.yaml,web-slang-{1}.source', steps.info.outputs.version, steps.info.outputs.web_slang_version) }}
         bodyFile: "CHANGELOG.md"
         commit: ${{ github.sha }}
         tag: ${{ steps.info.outputs.tag }}
