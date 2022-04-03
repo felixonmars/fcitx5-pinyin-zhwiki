@@ -22,20 +22,28 @@ jobs:
     - name: Build
       run: make zhwiki.dict zhwiki.dict.yaml
 
-    - name: Extract tag name
-      id: tag
+    - name: Extract tag name and version info
+      id: info
       run: |
           version_line=$(cat Makefile | grep 'VERSION=' -m 1)
-          echo "::set-output name=result::${version_line#VERSION=}"
+          web_slang_version_line=$(cat Makefile | grep 'WEB_SLANG_VERSION=' -m 1)
+          tag_info=$(git describe --long --tags || echo v0.0.1)
+          
+          cp zhwiki.dict zhwiki-${version_line#VERSION=}.dict
+          cp zhwiki.dict.yaml zhwiki-${version_line#VERSION=}.dict.yaml
+          
+          echo "::set-output name=version::${version_line#VERSION=}"
+          echo "::set-output name=web_slang_version::${web_slang_version_line#WEB_SLANG_VERSION=}"
+          echo "::set-output name=tag::${tag_info%%-*}"
 
     - name: Release
       uses: ncipollo/release-action@v1
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
-        artifacts: "zhwiki.dict,zhwiki.dict.yaml"
+        artifacts: "zhwiki-{{ steps.info.outputs.version }}.dict,zhwiki-{{ steps.info.outputs.version }}.dict.yaml,web-slang-{{ steps.info.outputs.web_slang_version }}.source"
         bodyFile: "CHANGELOG.md"
         commit: ${{ github.sha }}
-        tag: ${{ steps.tag.outputs.result }}
+        tag: ${{ steps.info.outputs.tag }}
         allowUpdates: true
 
 
