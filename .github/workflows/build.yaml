@@ -41,7 +41,7 @@ jobs:
       uses: ncipollo/release-action@v1
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
-        artifacts: "zhwiki-{{ steps.info.outputs.version }}.dict,zhwiki-{{ steps.info.outputs.version }}.dict.yaml,web-slang-{{ steps.info.outputs.web_slang_version }}.source"
+        artifacts: zhwiki-{{ steps.info.outputs.version }}.dict,zhwiki-{{ steps.info.outputs.version }}.dict.yaml,web-slang-{{ steps.info.outputs.web_slang_version }}.source
         bodyFile: "CHANGELOG.md"
         commit: ${{ github.sha }}
         tag: ${{ steps.info.outputs.tag }}
