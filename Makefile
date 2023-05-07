@@ -1,5 +1,5 @@
-VERSION=20230320
-WEB_SLANG_VERSION=20230329
+VERSION=20230501
+WEB_SLANG_VERSION=20230507
 FILENAME=zhwiki-$(VERSION)-all-titles-in-ns0
 WEB_SLANG_FILE=web-slang-$(WEB_SLANG_VERSION).txt
 WEB_SLANG_SOURCE=web-slang-$(WEB_SLANG_VERSION).source
@@ -36,7 +36,7 @@ zhwiki.dict.yaml: zhwiki.raw
 	sed 's/[ ][ ]*/\t/g' zhwiki.raw > zhwiki.rime.raw
 	sed -i 's/\t0//g' zhwiki.rime.raw
 	sed -i "s/'/ /g" zhwiki.rime.raw
-	echo -e '---\nname: zhwiki\nversion: "0.1"\nsort: by_weight\n...\n' >> zhwiki.dict.yaml
+	echo -e '---\nname: zhwiki\nversion: "0.1"\nsort: by_weight\n...\n' > zhwiki.dict.yaml
 	cat zhwiki.rime.raw >> zhwiki.dict.yaml
 
 install: zhwiki.dict
