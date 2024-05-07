@@ -45,10 +45,6 @@ def process(wikitext):
                     word = line.split(table_separator)[0].strip("*").strip()
                     add_words(word)
                     break
-        elif line.startswith("|"):
-            # Tables
-            word = line.split("|")[1]
-            add_words(word)
 
     return words
 
