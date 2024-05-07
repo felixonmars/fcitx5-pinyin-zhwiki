@@ -17,7 +17,36 @@ def fetch():
     return wikitext
 
 
+def trim_templates(wikitext):
+    template_level = 0
+    new_wikitext = ""
+    while True:
+        assert template_level >= 0, ValueError("Unbalanced template in wikitext:\n" + wikitext)
+        pre_open, open_tag, post_open = wikitext.partition("{{")
+        pre_close, close_tag, post_close = wikitext.partition("}}")
+        if open_tag and (not close_tag or len(pre_open) < len(pre_close)):
+            # Template starts here ({{)
+            wikitext = post_open
+            if template_level == 0:
+                new_wikitext += pre_open
+            template_level += 1
+        elif close_tag:
+            # Template ends here (}})
+            wikitext = post_close
+            template_level -= 1
+        else:
+            # No more templates
+            assert template_level == 0, ValueError("Unbalanced template in wikitext:\n" + wikitext)
+            # The assertion below must be true on earth
+            assert open_tag == close_tag == "", RuntimeError("Cosmic radiation detected")
+            new_wikitext += wikitext
+            break
+
+    return new_wikitext
+
+
 def process(wikitext):
+    wikitext = trim_templates(wikitext)
     words = collections.OrderedDict()
 
     def add_word(word):
