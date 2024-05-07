@@ -50,14 +50,12 @@ def process(wikitext):
     words = collections.OrderedDict()
 
     def add_word(word):
-        if word.startswith("形容"):
-            return
-        for garbage in ("、", "[", "]", "…"):
+        for garbage in ("[", "]", "…", ":", "：", ")", "）", '"', "“", "”", "-{", "}-", "简称", "簡稱"):
             word = word.replace(garbage, "")
         words[word.strip()] = None
 
     def add_words(word):
-        for word_separator in ("、", "/", "|", "，", "。"):
+        for word_separator in ("、", "/", "|", "，", "。", "?", "？", "(", "（"):
             if word_separator in word:
                 for w in word.split(word_separator):
                     # recursively resolve
@@ -66,14 +64,29 @@ def process(wikitext):
         else:
             add_word(word)
 
+    def iter_bolds(line):
+        line_bak = line
+        while "'''" in line:
+            _, sep1, line = line.partition("'''")
+            bold, sep2, line = line.partition("'''")
+            assert sep1 and sep2, ValueError("Unclosed ''' in line: " + line_bak)
+            yield bold
+
     for line in wikitext.split("\n"):
-        if line.startswith("*"):
-            # Lists
-            for table_separator in ("：", ":"):
-                if table_separator in line:
-                    word = line.split(table_separator)[0].strip("*").strip()
-                    add_words(word)
-                    break
+        if not line.startswith("*"):
+            continue
+        # Lists
+        line = line.strip("*").strip()
+        pre_colon, sep, post_colon = line.partition("'''：")
+        if not sep:
+            pre_colon, sep, post_colon = line.partition("''':")
+        for bold in iter_bolds(pre_colon + sep):
+            # Add bold words before colon
+            add_words(bold)
+        for bold in iter_bolds(post_colon):
+            # Add bold words after colon (or line w/o colon), skipping the origin of abbreviation (length probably <= 2)
+            if len(bold) > 2:
+                add_words(bold)
 
     return words
 
