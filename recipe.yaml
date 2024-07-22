@@ -5,6 +5,6 @@ recipe:
   description: >-
     Install zhwiki dict from fcitx5-pinyin-zhwiki
 download_files: >-
-  zhwiki.dict.yaml::https://github.com/felixonmars/fcitx5-pinyin-zhwiki/releases/download/0.2.4/zhwiki-20240426.dict.yaml
+  zhwiki.dict.yaml::https://github.com/felixonmars/fcitx5-pinyin-zhwiki/releases/download/0.2.4/zhwiki-20240722.dict.yaml
 install_files: >-
   zhwiki.dict.yaml
