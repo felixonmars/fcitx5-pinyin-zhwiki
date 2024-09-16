@@ -36,7 +36,7 @@ zhwiki.dict.yaml: zhwiki.raw
 	sed 's/[ ][ ]*/\t/g' zhwiki.raw > zhwiki.rime.raw
 	sed -i 's/\t0//g' zhwiki.rime.raw
 	sed -i "s/'/ /g" zhwiki.rime.raw
-	echo -e '---\nname: zhwiki\nversion: "0.1"\nsort: by_weight\n...\n' > zhwiki.dict.yaml
+	printf -- '---\nname: zhwiki\nversion: "0.1"\nsort: by_weight\n...\n' > zhwiki.dict.yaml
 	cat zhwiki.rime.raw >> zhwiki.dict.yaml
 
 install: zhwiki.dict
