@@ -46,4 +46,4 @@ install_rime_dict: zhwiki.dict.yaml
 	install -Dm644 zhwiki.dict.yaml -t $(DESTDIR)/usr/share/rime-data/
 
 clean:
-	rm -f $(FILENAME) zhwiki.{source,raw,dict,dict.yaml} web-slang.source
+	rm -f $(FILENAME).gz $(WEB_SLANG_SOURCE) $(WEB_SLANG_FILE) $(FILENAME) zhwiki.source zhwiki.raw zhwiki.raw.tmp zhwiki.dict zhwiki.dict.yaml zhwiki.rime.raw
