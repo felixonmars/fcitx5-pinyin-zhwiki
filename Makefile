@@ -4,6 +4,8 @@ FILENAME=zhwiki-$(VERSION)-all-titles-in-ns0
 WEB_SLANG_FILE=web-slang-$(WEB_SLANG_VERSION).txt
 WEB_SLANG_SOURCE=web-slang-$(WEB_SLANG_VERSION).source
 
+.DELETE_ON_ERROR:
+
 all: build
 
 build: zhwiki.dict
