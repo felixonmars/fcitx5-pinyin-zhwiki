@@ -12,6 +12,8 @@ all: build
 
 build: zhwiki.dict zhwiktionary.dict zhwikisource.dict
 
+build_rime_dict: zhwiki.dict.yaml zhwiktionary.dict.yaml zhwikisource.dict.yaml
+
 download: $(ZHWIKI_FILENAME).gz
 
 $(ZHWIKI_FILENAME).gz:
