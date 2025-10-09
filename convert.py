@@ -5,7 +5,7 @@
 # input_filename is a file of Wikipedia article titles, one title per line.
 
 import logging
-import re
+import regex
 import sys
 
 import opencc
@@ -20,11 +20,11 @@ _LIST_PAGE_ENDINGS = [
 _LOG_EVERY = 1000
 
 _PINYIN_SEPARATOR = '\''
+# https://ayaka.shn.hk/hanregex/
 # \u00b7 -> ·
 # \u002d -> -
 # \u2014 -> —
-_HANZI_RE = re.compile("^[\u4e00-\u9fa5\u00b7\u002d\u2014]+$")
-_INTERPUNCT_TRANSTAB = str.maketrans("", "", "·-—")
+_HANZI_RE = regex.compile(r"^([\p{Unified_Ideograph}\u3006\u3007\u00b7\u002d\u2014][\ufe00-\ufe0f\U000e0100-\U000e01ef]?)+$")
 _TO_SIMPLIFIED_CHINESE = opencc.OpenCC('t2s.json')
 
 _PINYIN_FIXES = {

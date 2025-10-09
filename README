@@ -27,6 +27,7 @@ libime (https://github.com/fcitx/libime/)
 Python modules:
 opencc (https://pypi.org/project/OpenCC/)
 pypinyin (https://pypi.org/project/pypinyin/)
+regex (https://pypi.org/project/regex/)
 
 
 Manual Build & Installation:
