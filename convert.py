@@ -24,7 +24,8 @@ _PINYIN_SEPARATOR = '\''
 # \u00b7 -> ·
 # \u002d -> -
 # \u2014 -> —
-_HANZI_RE = regex.compile(r"^([\p{Unified_Ideograph}\u3006\u3007\u00b7\u002d\u2014][\ufe00-\ufe0f\U000e0100-\U000e01ef]?)+$")
+_HANZI_RE = regex.compile(r"([\p{Unified_Ideograph}\u3006\u3007\u00b7\u002d\u2014][\ufe00-\ufe0f\U000e0100-\U000e01ef]?)+")
+_INTERPUNCT_TRANSTAB = str.maketrans("", "", "·-—")
 _TO_SIMPLIFIED_CHINESE = opencc.OpenCC('t2s.json')
 
 _PINYIN_FIXES = {
@@ -35,7 +36,7 @@ logging.basicConfig(level=logging.INFO)
 
 
 def is_good_title(title, previous_title=None):
-    if not _HANZI_RE.match(title):
+    if not _HANZI_RE.fullmatch(title):
         return False
 
     # Skip single character & too long pages
@@ -72,7 +73,7 @@ def main():
                 stripped_title = title.translate(_INTERPUNCT_TRANSTAB)
                 pinyin = [_PINYIN_FIXES.get(item, item) for item in lazy_pinyin(stripped_title)]
                 pinyin = _PINYIN_SEPARATOR.join(pinyin)
-                if pinyin == stripped_title:
+                if _HANZI_RE.search(pinyin):
                     logging.info(
                         f'Failed to convert to Pinyin. Ignoring: {pinyin}')
                     continue
