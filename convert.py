@@ -21,11 +21,13 @@ _LOG_EVERY = 1000
 
 _PINYIN_SEPARATOR = '\''
 # https://ayaka.shn.hk/hanregex/
-# \u00b7 -> ·
-# \u002d -> -
-# \u2014 -> —
-_HANZI_RE = regex.compile(r"([\p{Unified_Ideograph}\u3006\u3007\u00b7\u002d\u2014][\ufe00-\ufe0f\U000e0100-\U000e01ef]?)+")
-_INTERPUNCT_TRANSTAB = str.maketrans("", "", "·-—")
+# INTERPUNCT   \u00b7 -> ·
+# HYPHEN-MINUS \u002d -> -
+# HYPHEN       \u2010 -> ‐
+# EN DASH      \u2013 -> –
+# EM DASH      \u2014 -> —
+_HANZI_RE = regex.compile(r"([\p{Unified_Ideograph}\u3006\u3007\u00b7\u002d\u2010\u2013\u2014][\ufe00-\ufe0f\U000e0100-\U000e01ef]?)+")
+_INTERPUNCT_TRANSTAB = str.maketrans("", "", "·-‐–—")
 _TO_SIMPLIFIED_CHINESE = opencc.OpenCC('t2s.json')
 
 _PINYIN_FIXES = {
