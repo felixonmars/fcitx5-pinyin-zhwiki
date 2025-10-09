@@ -20,7 +20,11 @@ _LIST_PAGE_ENDINGS = [
 _LOG_EVERY = 1000
 
 _PINYIN_SEPARATOR = '\''
-_HANZI_RE = re.compile('^[\u4e00-\u9fa5]+$')
+# \u00b7 -> ·
+# \u002d -> -
+# \u2014 -> —
+_HANZI_RE = re.compile("^[\u4e00-\u9fa5\u00b7\u002d\u2014]+$")
+_INTERPUNCT_TRANSTAB = str.maketrans("", "", "·-—")
 _TO_SIMPLIFIED_CHINESE = opencc.OpenCC('t2s.json')
 
 _PINYIN_FIXES = {
@@ -65,9 +69,10 @@ def main():
         for line in f:
             title = _TO_SIMPLIFIED_CHINESE.convert(line.strip())
             if is_good_title(title, previous_title):
-                pinyin = [_PINYIN_FIXES.get(item, item) for item in lazy_pinyin(title)]
+                stripped_title = title.translate(_INTERPUNCT_TRANSTAB)
+                pinyin = [_PINYIN_FIXES.get(item, item) for item in lazy_pinyin(stripped_title)]
                 pinyin = _PINYIN_SEPARATOR.join(pinyin)
-                if pinyin == title:
+                if pinyin == stripped_title:
                     logging.info(
                         f'Failed to convert to Pinyin. Ignoring: {pinyin}')
                     continue
