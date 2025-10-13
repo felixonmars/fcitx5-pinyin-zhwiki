@@ -1,20 +1,21 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import json
 import urllib.parse
-import urllib.request
 import collections
 import sys
-
+from mediawiki import init_session, do_request
 
 def fetch():
-    _ZHWIKI_SOURCE_URL = "https://zh.wikipedia.org/w/api.php?action=parse&format=json&prop=wikitext&uselang=zh&formatversion=2&page="
+    # https://www.mediawiki.org/wiki/API:REST_API/Reference#Get_page_source
+    _ZHWIKI_SOURCE_URL = "https://zh.wikipedia.org/w/rest.php/v1/page/"
     _PAGE = "中国大陆网络用语列表"
 
-    page = urllib.request.urlopen(_ZHWIKI_SOURCE_URL + urllib.parse.quote(_PAGE)).read()
-    wikitext = json.loads(page)["parse"]["wikitext"]
-    return wikitext
+    url = _ZHWIKI_SOURCE_URL + urllib.parse.quote(_PAGE)
+    init_session()
+    r = do_request(url)
+    page = r.json()
+    return page["source"]
 
 
 def trim_templates(wikitext):
