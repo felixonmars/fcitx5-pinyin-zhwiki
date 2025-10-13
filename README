@@ -28,7 +28,7 @@ Python modules:
 opencc (https://pypi.org/project/OpenCC/)
 pypinyin (https://pypi.org/project/pypinyin/)
 regex (https://pypi.org/project/regex/)
-
+tenacity (https://pypi.org/project/tenacity/)
 
 Manual Build & Installation:
 
