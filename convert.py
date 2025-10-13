@@ -67,9 +67,9 @@ def make_output(word, pinyin):
     return '\t'.join([word, pinyin, '0'])
 
 
-def load_excluded_titles(filename="exclude-titles.txt"):
+def load_excluded_titles(filename):
     excluded_titles = set()
-    if os.path.exists(filename):
+    if filename and os.path.exists(filename):
         with open(filename, "r", encoding="utf-8") as f:
             for line in f:
                 excluded_titles.add(line.strip())
@@ -86,12 +86,12 @@ def main():
     previous_title = None
     result_count = 0
 
-    excluded_titles = load_excluded_titles(exclude_filename) if exclude_filename else None
+    excluded_titles = load_excluded_titles(exclude_filename) if exclude_filename else set()
 
     with open(source) as f:
         for line in f:
             title = _TO_SIMPLIFIED_CHINESE.convert(line.strip())
-            if excluded_titles and title in excluded_titles:
+            if title in excluded_titles:
                 logging.debug(f'Excluded title: {title}')
                 continue
             if is_good_title(title, previous_title):
