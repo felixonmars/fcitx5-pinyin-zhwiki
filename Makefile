@@ -1,21 +1,31 @@
 VERSION=20250820
 WEB_SLANG_VERSION=20250823
 EXCLUDE_TITLES_VERSION=20251010
-FILENAME=zhwiki-$(VERSION)-all-titles-in-ns0
+ZHWIKI_FILENAME=zhwiki-$(VERSION)-all-titles-in-ns0
+ZHDICT_FILENAME=zhwiktionary-$(VERSION)-all-titles-in-ns0
+ZHSRC_FILENAME=zhwikisource-$(VERSION)-all-titles-in-ns0
 WEB_SLANG_FILE=web-slang-$(WEB_SLANG_VERSION).txt
-WEB_SLANG_SOURCE=web-slang-$(WEB_SLANG_VERSION).source
-EXCLUDE_TITLES_FILE=exclude-titles-$(EXCLUDE_TITLES_VERSION).txt
+WEB_SLANG_SOURCE=web-slang-$(WEB_SLANG_VERSION).wikitext
+ZHWIKI_EXCLUDE_TITLES_FILE=zhwiki-exclude-titles-$(EXCLUDE_TITLES_VERSION).txt
 
 .DELETE_ON_ERROR:
 
 all: build
 
-build: zhwiki.dict
+build: zhwiki.dict zhwiktionary.dict zhwikisource.dict web-slang.dict
 
-download: $(FILENAME).gz
+build_rime_dict: zhwiki.dict.yaml zhwiktionary.dict.yaml zhwikisource.dict.yaml web-slang.dict.yaml
 
-$(FILENAME).gz:
-	wget https://dumps.wikimedia.org/zhwiki/$(VERSION)/$(FILENAME).gz
+download: $(ZHWIKI_FILENAME).gz
+
+$(ZHWIKI_FILENAME).gz:
+	wget https://dumps.wikimedia.org/zhwiki/$(VERSION)/$(ZHWIKI_FILENAME).gz
+
+$(ZHDICT_FILENAME).gz:
+	wget https://dumps.wikimedia.org/zhwiktionary/$(VERSION)/$(ZHDICT_FILENAME).gz
+
+$(ZHSRC_FILENAME).gz:
+	wget https://dumps.wikimedia.org/zhwikisource/$(VERSION)/$(ZHSRC_FILENAME).gz
 
 $(WEB_SLANG_SOURCE):
 	./zhwiki-web-slang.py --fetch > $(WEB_SLANG_SOURCE)
@@ -23,34 +33,60 @@ $(WEB_SLANG_SOURCE):
 $(WEB_SLANG_FILE): $(WEB_SLANG_SOURCE)
 	./zhwiki-web-slang.py --process $(WEB_SLANG_SOURCE) > $(WEB_SLANG_FILE)
 
-$(EXCLUDE_TITLES_FILE):
-	./zhwiki-exclude-titles.py $(EXCLUDE_TITLES_FILE)
+$(ZHWIKI_EXCLUDE_TITLES_FILE):
+	./zhwiki-exclude-titles.py $(ZHWIKI_EXCLUDE_TITLES_FILE)
 
-$(FILENAME): $(FILENAME).gz
-	gzip -k -d $(FILENAME).gz
+%: %.gz
+	gzip -k -d $<
 
-zhwiki.source: $(FILENAME) $(WEB_SLANG_FILE)
-	cat $(FILENAME) $(WEB_SLANG_FILE) > zhwiki.source
+zhwiki.source: $(ZHWIKI_FILENAME)
+	cp $< $@
 
-zhwiki.raw: zhwiki.source $(EXCLUDE_TITLES_FILE)
-	./convert.py zhwiki.source $(EXCLUDE_TITLES_FILE) > zhwiki.raw.tmp
-	sort -u zhwiki.raw.tmp > zhwiki.raw
+zhwiktionary.source: $(ZHDICT_FILENAME)
+	cp $< $@
 
-zhwiki.dict: zhwiki.raw
-	libime_pinyindict zhwiki.raw zhwiki.dict
+zhwikisource.source: $(ZHSRC_FILENAME)
+	cp $< $@
 
-zhwiki.dict.yaml: zhwiki.raw
-	sed 's/[ ][ ]*/\t/g' zhwiki.raw > zhwiki.rime.raw
-	sed -i 's/\t0//g' zhwiki.rime.raw
-	sed -i "s/'/ /g" zhwiki.rime.raw
-	printf -- '---\nname: zhwiki\nversion: "0.1"\nsort: by_weight\n...\n' > zhwiki.dict.yaml
-	cat zhwiki.rime.raw >> zhwiki.dict.yaml
+web-slang.source: $(WEB_SLANG_FILE)
+	cp $< $@
 
-install: zhwiki.dict
-	install -Dm644 zhwiki.dict -t $(DESTDIR)/usr/share/fcitx5/pinyin/dictionaries/
+zhwiki-exclude.txt: $(ZHWIKI_EXCLUDE_TITLES_FILE)
+	cp $< $@
 
-install_rime_dict: zhwiki.dict.yaml
-	install -Dm644 zhwiki.dict.yaml -t $(DESTDIR)/usr/share/rime-data/
+zhwiktionary-exclude.txt:
+	touch $@
+
+zhwikisource-exclude.txt:
+	touch $@
+
+%.raw: %.source %-exclude.txt
+	./convert.py $? > $@.tmp
+	sort -u $@.tmp > $@
+
+%.dict: %.raw
+	libime_pinyindict $< $@
+
+%.dict.yaml: %.raw
+	sed 's/[ ][ ]*/\t/g' $< > $*.rime.raw
+	sed -i 's/\t0//g' $*.rime.raw
+	sed -i "s/'/ /g" $*.rime.raw
+	printf -- '---\nname: $*\nversion: "0.1"\nsort: by_weight\n...\n' > $@
+	cat $*.rime.raw >> $@
+
+install-%: %.dict
+	install -Dm644 $< -t $(DESTDIR)/usr/share/fcitx5/pinyin/dictionaries/
+
+install_rime_dict-%: %.dict.yaml
+	install -Dm644 $< -t $(DESTDIR)/usr/share/rime-data/
+
+install: install-zhwiki install-zhwikidictionary install-zhwikisource install-web-slang
+
+install_rime_dict: install_rime_dict-zhwiki install_rime_dict-zhwikidictionary install_rime_dict-zhwikisource install_rime_dict-web-slang
 
 clean:
-	rm -f $(FILENAME).gz $(WEB_SLANG_SOURCE) $(WEB_SLANG_FILE) $(FILENAME) zhwiki.source zhwiki.raw zhwiki.raw.tmp zhwiki.dict zhwiki.dict.yaml zhwiki.rime.raw $(EXCLUDE_TITLES_FILE) exclude-titles-*.txt
+	rm -f $(ZHWIKI_FILENAME).gz $(ZHWIKI_FILENAME) zhwiki.source zhwiki.raw zhwiki.raw.tmp zhwiki.dict zhwiki.dict.yaml zhwiki.rime.raw
+	rm -f $(ZHDICT_FILENAME).gz $(ZHDICT_FILENAME) zhwiktionary.source zhwiktionary.raw zhwiktionary.raw.tmp zhwiktionary.dict zhwiktionary.dict.yaml zhwiktionary.rime.raw
+	rm -f $(ZHSRC_FILENAME).gz $(ZHSRC_FILENAME) zhwikisource.source zhwikisource.raw zhwikisource.raw.tmp zhwikisource.dict zhwikisource.dict.yaml zhwikisource.rime.raw
+	rm -f ${ZHWIKI_EXCLUDE_TITLES_FILE} zhwiki-exclude-titles-*.txt zhwiki-exclude.txt
+	rm -f $(WEB_SLANG_SOURCE) $(WEB_SLANG_FILE) web-slang.source web-slang.raw web-slang.raw.tmp web-slang.dict web-slang.dict.yaml web-slang.rime.raw

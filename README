@@ -37,7 +37,7 @@ sudo make install
 
 Manual Build rime dict & Installation
 
-make zhwiki.dict.yaml
+make build_rime_dict
 sudo make install_rime_dict
 
 License: Unlicense
