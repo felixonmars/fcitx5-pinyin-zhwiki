@@ -66,9 +66,9 @@ install-%: %.dict
 install_rime_dict-%: %.dict.yaml
 	install -Dm644 $< -t $(DESTDIR)/usr/share/rime-data/
 
-install: install-zhwiki install-zhwikidictionary install-zhwikisource install-web-slang
+install: install-zhwiki install-zhwiktionary install-zhwikisource install-web-slang
 
-install_rime_dict: install_rime_dict-zhwiki install_rime_dict-zhwikidictionary install_rime_dict-zhwikisource install_rime_dict-web-slang
+install_rime_dict: install_rime_dict-zhwiki install_rime_dict-zhwiktionary install_rime_dict-zhwikisource install_rime_dict-web-slang
 
 clean:
 	rm -f $(ZHWIKI_FILENAME).gz $(ZHWIKI_FILENAME) zhwiki.source zhwiki.raw zhwiki.raw.tmp zhwiki.dict zhwiki.dict.yaml zhwiki.rime.raw
