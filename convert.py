@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # Usage:
-#   convert.py input_filename
+#   convert.py input_filename [exclude_filename]
 # input_filename is a file of Wikipedia article titles, one title per line.
+# exclude_filename is the list of entries to be excluded; optional.
 
 import logging
 import regex
@@ -65,12 +66,29 @@ def make_output(word, pinyin):
     return '\t'.join([word, pinyin, '0'])
 
 
+def load_excluded(path):
+    if not path:
+        return set()
+    with open(path) as f:
+        return {
+            _TO_SIMPLIFIED_CHINESE.convert(line.strip())
+            for line in f
+            if line.strip()
+        }
+
+
 def main():
+    if len(sys.argv) < 2:
+        raise ValueError("Usage: convert.py input_filename [exclude_filename]")
     previous_title = None
     result_count = 0
-    with open(sys.argv[1]) as f:
+    input_path = sys.argv[1]
+    excluded_titles = load_excluded(sys.argv[2] if len(sys.argv) > 2 else None)
+    with open(input_path) as f:
         for line in f:
             title = _TO_SIMPLIFIED_CHINESE.convert(line.strip())
+            if not title or title in excluded_titles:
+                continue
             if is_good_title(title, previous_title):
                 stripped_title = title.translate(_INTERPUNCT_TRANSTAB)
                 pinyin = [_PINYIN_FIXES.get(item, item) for item in lazy_pinyin(stripped_title)]
