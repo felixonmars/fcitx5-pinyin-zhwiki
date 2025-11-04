@@ -9,7 +9,7 @@ import regex
 import sys
 
 import opencc
-from pypinyin import lazy_pinyin
+from pypinyin import lazy_pinyin, load_single_dict
 
 # Require at least 2 characters
 _MINIMUM_LEN = 2
@@ -68,6 +68,9 @@ def make_output(word, pinyin):
 def main():
     previous_title = None
     result_count = 0
+    # FIXME: Workaround for https://github.com/mozillazg/pinyin-data/issues/57
+    #        and https://github.com/felixonmars/fcitx5-pinyin-zhwiki/issues/45
+    load_single_dict({ord('炔'): 'quē,guì'}) 
     with open(sys.argv[1]) as f:
         for line in f:
             title = _TO_SIMPLIFIED_CHINESE.convert(line.strip())
