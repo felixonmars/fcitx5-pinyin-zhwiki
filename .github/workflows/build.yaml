@@ -1,0 +1,52 @@
+name: Build Latest Dictionary Files
+
+on:
+  push:
+    branches:
+      - master
+      - feature/action
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+        submodules: true
+    
+    - name: Prepare Environment
+      run: |
+          pip3 install opencc pypinyin
+          sudo apt install libime-bin
+    
+    - name: Build
+      run: make zhwiki.dict zhwiki.dict.yaml
+
+    - name: Extract tag name and version info
+      id: info
+      run: |
+          version_line=$(cat Makefile | grep 'VERSION=' -m 1)
+          web_slang_version_line=$(cat Makefile | grep 'WEB_SLANG_VERSION=' -m 1)
+          tag_info=$(git describe --long --tags || echo v0.0.1)
+          
+          cp zhwiki.dict zhwiki-${version_line#VERSION=}.dict
+          cp zhwiki.dict.yaml zhwiki-${version_line#VERSION=}.dict.yaml
+          
+          echo "::set-output name=version::${version_line#VERSION=}"
+          echo "::set-output name=web_slang_version::${web_slang_version_line#WEB_SLANG_VERSION=}"
+          echo "::set-output name=tag::${tag_info%%-*}"
+
+    - name: Release
+      uses: ncipollo/release-action@v1
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        artifacts: ${{ format('zhwiki-{0}.dict,zhwiki-{0}.dict.yaml,web-slang-{1}.source', steps.info.outputs.version, steps.info.outputs.web_slang_version) }}
+        bodyFile: "CHANGELOG.md"
+        commit: ${{ github.sha }}
+        tag: ${{ steps.info.outputs.tag }}
+        allowUpdates: true
+
+
+
