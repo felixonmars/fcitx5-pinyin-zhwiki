@@ -49,11 +49,6 @@ def is_good_title(title, previous_title=None):
     if title.endswith(tuple(_LIST_PAGE_ENDINGS)):
         return False
 
-    if previous_title and \
-      len(previous_title) >= 4 and \
-      title.startswith(previous_title):
-        return False
-
     return True
 
 
