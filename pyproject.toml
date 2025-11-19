@@ -1,0 +1,20 @@
+[project]
+name = "fcitx5-pinyin-zhwiki"
+version = "0.3.0"
+description = ""
+authors = [
+    {name = "Your Name",email = "you@example.com"}
+]
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "regex (>=2025.11.3,<2026.0.0)",
+    "opencc (>=1.1.9,<2.0.0)",
+    "pypinyin (>=0.55.0,<0.56.0)",
+    "tenacity (>=9.1.2,<10.0.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
