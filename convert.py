@@ -13,9 +13,24 @@ from pypinyin import lazy_pinyin
 
 # Require at least 2 characters
 _MINIMUM_LEN = 2
-_LIST_PAGE_ENDINGS = [
-    '列表',
-    '对照表',
+_LIST_PAGE_REGEX = [
+    regex.compile(r".*列表"),
+    regex.compile(r".*对照表"),
+    regex.compile(r".*历年表现"),
+    regex.compile(r".*周年纪念"),
+    regex.compile(r".*朝年号"),
+    regex.compile(r".*事件.*周年"),
+    regex.compile(r".*历年.*得主"),
+    regex.compile(r".*届.*赛"),
+    regex.compile(r".*届.*奖"),
+    regex.compile(r".*届.*运动会"),
+    regex.compile(r".*届.*全运会.*"),
+    regex.compile(r".*届.*选举"),
+    regex.compile(r".*届.*代表团"),
+    regex.compile(r"以.*开始的[闰平]年"),
+    regex.compile(r"民国[一二三四五六七八九十零百〇廿卅]+年"),
+    regex.compile(r"(一九|二[零〇])[一二三四五六七八九十零百〇廿卅]+年"),
+    regex.compile(r"..[一二三四五六七八九十零〇廿卅]{1,2}年"),
 ]
 _LOG_EVERY = 1000
 
@@ -46,13 +61,9 @@ def is_good_title(title, previous_title=None):
         return False
 
     # Skip list pages
-    if title.endswith(tuple(_LIST_PAGE_ENDINGS)):
-        return False
-
-    if previous_title and \
-      len(previous_title) >= 4 and \
-      title.startswith(previous_title):
-        return False
+    for r in _LIST_PAGE_REGEX:
+        if r.fullmatch(title):
+            return False
 
     return True
 
