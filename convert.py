@@ -16,6 +16,9 @@ _MINIMUM_LEN = 2
 _LIST_PAGE_ENDINGS = [
     '列表',
     '对照表',
+    '年表',
+    '得奖名单',
+    '获奖名单',
 ]
 _LOG_EVERY = 1000
 
