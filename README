@@ -29,6 +29,7 @@ opencc (https://pypi.org/project/OpenCC/)
 pypinyin (https://pypi.org/project/pypinyin/)
 regex (https://pypi.org/project/regex/)
 tenacity (https://pypi.org/project/tenacity/)
+more_itertools (https://pypi.org/project/more_itertools/)
 
 Manual Build & Installation:
 
