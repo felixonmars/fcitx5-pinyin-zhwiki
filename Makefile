@@ -5,6 +5,8 @@ ZHDICT_FILENAME=zhwiktionary-$(VERSION)-all-titles-in-ns0
 ZHSRC_FILENAME=zhwikisource-$(VERSION)-all-titles-in-ns0
 WEB_SLANG_FILE=web-slang-$(WEB_SLANG_VERSION).txt
 WEB_SLANG_SOURCE=web-slang-$(WEB_SLANG_VERSION).wikitext
+ZHWIKI_EXCLUDE_TITLES_VERSION=20251010
+ZHWIKI_EXCLUDE_TITLES_FILE=zhwiki-exclude-titles-$(ZHWIKI_EXCLUDE_TITLES_VERSION).txt
 
 .DELETE_ON_ERROR:
 
@@ -31,6 +33,9 @@ $(WEB_SLANG_SOURCE):
 $(WEB_SLANG_FILE): $(WEB_SLANG_SOURCE)
 	./zhwiki-web-slang.py --process $(WEB_SLANG_SOURCE) > $(WEB_SLANG_FILE)
 
+$(ZHWIKI_EXCLUDE_TITLES_FILE):
+	./zhwiki-exclude-titles.py --save $@
+
 %: %.gz
 	gzip -k -d $<
 
@@ -46,8 +51,17 @@ zhwikisource.source: $(ZHSRC_FILENAME)
 web-slang.source: $(WEB_SLANG_FILE)
 	cp $< $@
 
-%.raw: %.source
-	./convert.py $< > $@.tmp
+zhwiki-exclude.txt: $(ZHWIKI_EXCLUDE_TITLES_FILE)
+	cp $< $@
+
+zhwiktionary-exclude.txt:
+	touch $@
+
+zhwikisource-exclude.txt:
+	touch $@
+
+%.raw: %.source %-exclude.txt
+	./convert.py $< $*-exclude.txt > $@.tmp
 	sort -u $@.tmp > $@
 
 %.dict: %.raw
@@ -75,3 +89,4 @@ clean:
 	rm -f $(ZHDICT_FILENAME).gz $(ZHDICT_FILENAME) zhwiktionary.source zhwiktionary.raw zhwiktionary.raw.tmp zhwiktionary.dict zhwiktionary.dict.yaml zhwiktionary.rime.raw
 	rm -f $(ZHSRC_FILENAME).gz $(ZHSRC_FILENAME) zhwikisource.source zhwikisource.raw zhwikisource.raw.tmp zhwikisource.dict zhwikisource.dict.yaml zhwikisource.rime.raw
 	rm -f $(WEB_SLANG_SOURCE) $(WEB_SLANG_FILE) web-slang.source web-slang.raw web-slang.raw.tmp web-slang.dict web-slang.dict.yaml web-slang.rime.raw
+	rm -f ${ZHWIKI_EXCLUDE_TITLES_FILE} zhwiki-exclude-titles-*.txt zhwiki-exclude.txt zhwiktionary-exclude.txt zhwikisource-exclude.txt
