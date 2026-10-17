@@ -59,8 +59,8 @@ _GREEK2LATIN = {
     u'\u03A3': ['si', 'G', 'ma'],              # Sigma
     u'\u03A4': ['ta', 'U'],                    # Tau
     u'\u03A5': ['U', 'P', 'si', 'L', 'O', 'N'],# Upsilon
-    u'\u03A6': ['P', 'hi'],                    # Phi
-    u'\u03A7': ['C', 'hi'],                    # Chi
+    u'\u03A6': ['P', 'H', 'I'],                # Phi
+    u'\u03A7': ['C', 'H', 'I'],                # Chi
     u'\u03A8': ['P', 'si'],                    # Psi
     u'\u03A9': ['O', 'me', 'ga'],              # Omega
     u'\u03B1': ['A', 'L', 'P', 'ha'],          # alpha
@@ -83,8 +83,8 @@ _GREEK2LATIN = {
     u'\u03C3': ['si', 'G', 'ma'],              # sigma
     u'\u03C4': ['ta', 'U'],                    # tau
     u'\u03C5': ['U', 'P', 'si', 'L', 'O', 'N'],# upsilon
-    u'\u03C6': ['P', 'hi'],                    # phi
-    u'\u03C7': ['C', 'hi'],                    # chi
+    u'\u03C6': ['P', 'H', 'I'],                # phi
+    u'\u03C7': ['C', 'H', 'I'],                # chi
     u'\u03C8': ['P', 'si'],                    # psi
     u'\u03C9': ['O', 'me', 'ga'],              # omega
 
